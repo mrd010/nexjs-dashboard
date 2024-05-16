@@ -1,25 +1,19 @@
-import React from 'react';
-import { Card } from '../ui/dashboard/cards';
-import { lusitana } from '../ui/fonts';
-import RevenueChart from '../ui/dashboard/revenue-chart';
-import LatestInvoices from '../ui/dashboard/latest-invoices';
-import { fetchCardData, fetchLatestInvoices, fetchRevenue } from '../lib/data';
+import React, { Suspense } from 'react';
+import { Card } from '../../ui/dashboard/cards';
+import { lusitana } from '../../ui/fonts';
+import RevenueChart from '../../ui/dashboard/revenue-chart';
+import LatestInvoices from '../../ui/dashboard/latest-invoices';
+import { fetchCardData, fetchLatestInvoices } from '../../lib/data';
+import { RevenueChartSkeleton } from '@/app/ui/skeletons';
 
 const page = async () => {
-  const [
-    revenue,
-    latestInvoices,
-    {
-      numberOfCustomers,
-      numberOfInvoices,
-      totalPaidInvoices,
-      totalPendingInvoices,
-    },
-  ] = await Promise.all([
-    fetchRevenue(),
-    fetchLatestInvoices(),
-    fetchCardData(),
-  ]);
+  const latestInvoices = await fetchLatestInvoices();
+  const {
+    numberOfInvoices,
+    numberOfCustomers,
+    totalPaidInvoices,
+    totalPendingInvoices,
+  } = await fetchCardData();
 
   return (
     <main>
@@ -49,7 +43,9 @@ const page = async () => {
         ></Card>
       </div>
       <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-4 lg:grid-cols-8 ">
-        <RevenueChart revenue={revenue}></RevenueChart>
+        <Suspense fallback={<RevenueChartSkeleton />}>
+          <RevenueChart></RevenueChart>
+        </Suspense>
         <LatestInvoices latestInvoices={latestInvoices}></LatestInvoices>
       </div>
     </main>
