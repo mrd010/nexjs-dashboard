@@ -10,7 +10,7 @@ import {
   RevenueChartSkeleton,
 } from '@/app/ui/skeletons';
 
-const page = async () => {
+const Page = async () => {
   return (
     <main>
       <h1 className={`${lusitana.className} mb-4 text-xl md:text-2xl`}>
@@ -33,4 +33,4 @@ const page = async () => {
   );
 };
 
-export default page;
+export default Page;
